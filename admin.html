@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Admin - Mural de Homenagens</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-gray-100 p-6">
+    <h1 class="text-3xl font-bold mb-4">Painel Administrativo</h1>
+    <table class="min-w-full bg-white">
+      <thead>
+        <tr>
+          <th class="py-2 px-4 border-b">ID</th>
+          <th class="py-2 px-4 border-b">Homenageado</th>
+          <th class="py-2 px-4 border-b">Descrição</th>
+          <th class="py-2 px-4 border-b">Aplausos</th>
+          <th class="py-2 px-4 border-b">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="adminTable">
+      </tbody>
+    </table>
+    <script>
+      async function fetchHomages() {
+        const res = await fetch('https://api.greb.com.br/functions/code_515be5/list_homages', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({})
+        });
+        const data = await res.json();
+        const table = document.getElementById('adminTable');
+        table.innerHTML = '';
+        data.homenagens.forEach(homage => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="border px-4 py-2">${homage.id}</td>
+            <td class="border px-4 py-2">${homage.homenageado}</td>
+            <td class="border px-4 py-2">${homage.descricao}</td>
+            <td class="border px-4 py-2">${homage.aplausos}</td>
+            <td class="border px-4 py-2">
+              <button class="bg-red-500 text-white px-2 py-1 rounded">Excluir</button>
+            </td>
+          `;
+          table.appendChild(tr);
+        });
+      }
+      fetchHomages();
+    </script>
+  </body>
+</html>
